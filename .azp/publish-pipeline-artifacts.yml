@@ -1,0 +1,13 @@
+########################################################################################################################
+# FileName:             publish-pipeline-arifacts.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+steps:
+- task: PublishPipelineArtifact@1
+  name: 'PublishPipelineArtifact'
+  displayName: 'Publish Pipeline Artifacts'
+  continueOnError: false
+  inputs:
+    path: $(Build.ArtifactStagingDirectory)
+    artifact: $(Agent.JobName)

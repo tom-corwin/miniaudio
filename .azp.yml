@@ -1,0 +1,103 @@
+########################################################################################################################
+# FileName:             .azp.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+# Build Number
+####################################################################################################
+name: $(Date:yyMMdd)$(Rev:rr)
+
+# Commit Trigger
+####################################################################################################
+trigger:
+  batch: false
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - "CMakeLists.txt"
+    - "miniaudio.h"
+    - "miniaudio.c"
+    - "extras/dr_flac.h"
+    - "extras/dr_mp3.h"
+    - "extras/dr_wav.h"
+    - "extras/stb_vorbis.h"
+
+# Workflow Definition
+####################################################################################################
+stages:
+
+- stage: 'Build'
+  displayName: 'Build'
+  jobs:
+
+  - job: 'BuildWindows'
+    displayName: 'Build (Windows)'
+    pool:
+      vmImage: 'windows-latest'
+    workspace:
+      clean: all
+    steps:
+    - template: ./.azp/cmake-build-miniaudio.yml
+    - template: ./.azp/copy-pipeline-artifacts.yml
+      parameters:
+        copyScript: 'copy /B /V .\build\Debug\miniaudio.dll $(Build.ArtifactStagingDirectory)'
+    - template: ./.azp/publish-pipeline-artifacts.yml
+
+  - job: 'BuildLinux'
+    displayName: 'Build (Linux)'
+    pool:
+      vmImage: 'ubuntu-latest'
+    workspace:
+      clean: all
+    steps:
+    - template: ./.azp/cmake-build-miniaudio.yml
+    - template: ./.azp/copy-pipeline-artifacts.yml
+      parameters:
+        copyScript: 'cp ./build/libminiaudio.so $(Build.ArtifactStagingDirectory)'
+    - template: ./.azp/publish-pipeline-artifacts.yml
+
+  - job: 'BuildMacOS'
+    displayName: 'Build (MacOS)'
+    pool:
+      vmImage: 'macOS-latest'
+    workspace:
+      clean: all
+    steps:
+    - template: ./.azp/cmake-build-miniaudio.yml
+    - template: ./.azp/copy-pipeline-artifacts.yml
+      parameters:
+        copyScript: 'cp ./build/libminiaudio.dylib $(Build.ArtifactStagingDirectory)'
+    - template: ./.azp/publish-pipeline-artifacts.yml
+
+- stage: 'Publish'
+  displayName: 'Publish'
+  dependsOn:
+  - 'Build'
+  jobs:
+  - job: 'CommitAndPush'
+    displayName: 'Commit and Push (tom-corwin/tacdevlibs)'
+    variables:
+    - group: GitHubCredentials
+    pool:
+      vmImage: 'windows-latest'
+    workspace:
+      clean: all
+    steps:
+    - checkout: self
+      clean: true
+    - template: ./.azp/clone-tacdevlibs.yml
+    - template: ./.azp/download-pipeline-artifacts.yml
+      parameters:
+        osName: 'Windows'
+        osID: 'win'
+    - template: ./.azp/download-pipeline-artifacts.yml
+      parameters:
+        osName: 'MacOS'
+        osID: 'osx'
+    - template: ./.azp/download-pipeline-artifacts.yml
+      parameters:
+        osName: 'Linux'
+        osID: 'linux'
+    - template: ./.azp/commit-and-push-tacdevlibs.yml

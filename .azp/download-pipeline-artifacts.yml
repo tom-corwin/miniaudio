@@ -1,0 +1,22 @@
+########################################################################################################################
+# FileName:             download-pipeline-arifacts.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+parameters:
+- name: osName
+  type: string
+  default: ''
+- name: osID
+  type: string
+  default: ''
+
+steps:
+- task: DownloadPipelineArtifact@2
+  name: 'Download${{ parameters.osName }}BuildArtifacts'
+  displayName: 'Download ${{ parameters.osName }} Build Artifacts'
+  continueOnError: false
+  inputs:
+    buildType: 'current'
+    artifactName: 'Build (${{ parameters.osName }})'
+    targetPath: '$(Build.BinariesDirectory)\sources\TACDevel.Audio\lib\${{ parameters.osID }}-x64'

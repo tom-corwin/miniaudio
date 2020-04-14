@@ -1,0 +1,14 @@
+########################################################################################################################
+# FileName:             commit-and-push-tacdevlibs.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+steps:
+- script: |
+    git add -A
+    git commit -m "Updated miniaudio binaries from 'tom-corwin/miniaudio'."
+    git push https://$(GitHubPAT)@github.com/tom-corwin/tacdevlibs.git master
+  name: 'CommitAndPushTACDevLibs'
+  displayName: 'Commit and Push (tom-corwin/tacdevlibs)'
+  workingDirectory: '$(Build.BinariesDirectory)'
+  continueOnError: false

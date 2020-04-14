@@ -10,3 +10,5 @@ tests/_build/vc15/
 tools/_build/
 *.vcxproj.user
 .vs/
+[Oo]ut/
+[Bb]uild/

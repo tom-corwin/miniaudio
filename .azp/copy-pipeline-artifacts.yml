@@ -1,0 +1,16 @@
+########################################################################################################################
+# FileName:             copy-pipeline-artifacts.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+parameters:
+- name: copyScript
+  type: string
+  default: ''
+
+steps:
+- script: ${{ parameters.copyScript }}
+  name: 'CopyPipelineArtifacts'
+  displayName: 'Copy Pipeline Artifacts'
+  workingDirectory: '$(Build.Repository.LocalPath)'
+  continueOnError: false

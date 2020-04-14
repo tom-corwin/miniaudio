@@ -1,0 +1,16 @@
+########################################################################################################################
+# FileName:             clone-tacdevlibs.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+steps:
+- script: |
+    git config --global user.email "tacorwin@outlook.com"
+    git config --global user.name "tom-corwin"
+    git clone https://$(GitHubPAT)@github.com/tom-corwin/tacdevlibs $(Build.BinariesDirectory)
+    git checkout master
+    git pull https://$(GitHubPAT)@github.com/tom-corwin/tacdevlibs master
+  name: 'CloneTACDevLibs'
+  displayName: 'Clone (tom-corwin/tacdevlibs)'
+  workingDirectory: '$(Build.BinariesDirectory)'
+  continueOnError: false

@@ -1,0 +1,13 @@
+########################################################################################################################
+# FileName:             cmake-build-miniaudio.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+steps:
+- script: |
+    cmake -S . -B build
+    cmake --build build
+  name: 'CMakeBuildMiniaudio'
+  displayName: 'CMake Build (miniaudio)'
+  workingDirectory: '$(Build.Repository.LocalPath)'
+  continueOnError: false

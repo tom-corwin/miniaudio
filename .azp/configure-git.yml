@@ -1,0 +1,13 @@
+########################################################################################################################
+# FileName:             configure-git.yml
+# Copyright/License:    https://github.com/tom-corwin/tacdevlibs/blob/master/LICENSE.md
+########################################################################################################################
+
+steps:
+- script: |
+    git config --global user.email "tacorwin@outlook.com"
+    git config --global user.name "tom-corwin"
+  name: 'ConfigureGit'
+  displayName: 'Configure Git'
+  workingDirectory: '$(Build.BinariesDirectory)'
+  continueOnError: false
